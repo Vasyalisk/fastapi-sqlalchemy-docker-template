@@ -37,7 +37,10 @@ class Settings(BaseSettings):
     @property
     def INSTALLED_APPS(self):
         return [
-            "core"
+            "core",
+            "database",
+            "users",
+            "security",
         ]
 
     # --- Redis section ---

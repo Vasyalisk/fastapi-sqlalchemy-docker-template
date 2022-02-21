@@ -12,7 +12,7 @@ def add_routers(app: FastAPI):
         if (module := _import_module_or_none(f"{app_name}.routers"))
     )
     [
-        app.include_router(router)
+        app.include_router(router, prefix="/api")
         for module in router_modules
         if (router := getattr(module, "router", None))
     ]

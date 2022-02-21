@@ -36,4 +36,4 @@ def command(app_name: str = typer.Argument(...)):
             file.write(content)
 
     Popen(["chmod", "-R", "777", app_name])
-    typer.echo("Successfully created users app")
+    typer.echo(f"Successfully created {app_name} app")
