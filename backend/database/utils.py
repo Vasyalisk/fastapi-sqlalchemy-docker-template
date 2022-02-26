@@ -1,4 +1,8 @@
+import functools
+
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from functools import wraps
 
 from database.engine import AsyncSessionLocal
 
@@ -36,6 +40,7 @@ def with_session(session_name="session"):
     """
 
     def decorator(func):
+        @wraps(func)
         async def wrapper(*args, **kwargs):
             async with AsyncSessionLocal() as session:
                 kwargs[session_name] = session
