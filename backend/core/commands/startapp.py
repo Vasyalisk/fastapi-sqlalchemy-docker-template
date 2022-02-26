@@ -13,7 +13,7 @@ APP_CONTENT = {
     "routers.py": (
         "from fastapi import APIRouter\n"
         "\n"
-        "router = APIRouter(prefix='/{app_name}')"
+        "router = APIRouter(prefix='/{app_name}', tags=[{app_name}])"
     ),
 }
 

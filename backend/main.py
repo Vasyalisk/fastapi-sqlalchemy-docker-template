@@ -9,7 +9,8 @@ app = FastAPI(
     title=settings.PROJECT_NAME + " API",
     description="FastAPI based backend app",
     version="1.0",
-    redoc_url=None
+    redoc_url=None,
+    swagger_ui_parameters={"defaultModelsExpandDepth": -1}
 )
 
 

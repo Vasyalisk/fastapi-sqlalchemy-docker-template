@@ -1,5 +1,5 @@
 uvicorn[standard]==0.16.0
-fastapi==0.70.1
+fastapi==0.74.1
 python-multipart==0.0.5
 pydantic[email]==1.9.0
 requests==2.27.0

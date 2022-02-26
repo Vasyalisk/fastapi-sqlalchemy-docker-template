@@ -20,6 +20,13 @@ async def register_view(
 ):
     post_data.password = utils.generate_password_hash(post_data.password)
     user = await crud.register_user(**post_data.dict())
-    
+
     authorization.user = user
+    return authorization.create_tokens()
+
+
+async def refresh_tokens_view(
+        authorization: deps.AuthUser = Depends(utils.get_authorization)
+):
+    await authorization.requires_refresh_token()
     return authorization.create_tokens()

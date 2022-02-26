@@ -87,7 +87,11 @@ class AuthUser:
 
     async def requires_refresh_token(self):
         jwt_authorize = AuthJWT(req=self.request)
-        jwt_authorize.jwt_refresh_token_required()
+        try:
+            jwt_authorize.jwt_refresh_token_required()
+        except Exception:
+            self._raise_unauthorized()
+
         user_id = jwt_authorize.get_jwt_subject()
 
         user = await crud.get_user_by_id(user_id)
