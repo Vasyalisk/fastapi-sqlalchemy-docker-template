@@ -1,6 +1,7 @@
 from config import settings
 from core import middleware
-from core import utils
+from core import utils as core_utils
+from security import utils as security_utils
 
 from fastapi import FastAPI
 
@@ -15,7 +16,8 @@ app = FastAPI(
 @app.on_event("startup")
 async def on_startup():
     middleware.add_cors_middleware(app)
-    utils.add_routers(app)
+    core_utils.add_routers(app)
+    security_utils.load_security_config()
 
 
 @app.on_event("shutdown")

@@ -34,14 +34,13 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    @property
-    def INSTALLED_APPS(self):
-        return [
-            "core",
-            "database",
-            "users",
-            "security",
-        ]
+    INSTALLED_APPS: list = [
+        "core",
+        "database",
+        "users",
+        "security",
+        "migrations",
+    ]
 
     # --- Redis section ---
     REDIS_SERVER: str
@@ -69,6 +68,9 @@ class Settings(BaseSettings):
     # --- Authentication section ---
     ACCESS_TOKEN_EXPIRE_MINUTES: Optional[int] = 24 * 60
     REFRESH_TOKEN_EXPIRE_MINUTES: Optional[int] = 24 * 60
+
+    # --- Migrations section ---
+    MIGRATIONS_DIR: str = "/backend/migrations/versions"
 
     class Config:
         case_sensitive = True

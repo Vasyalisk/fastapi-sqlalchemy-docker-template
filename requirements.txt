@@ -22,5 +22,6 @@ Flask==2.0.2
 Flask-Admin==1.6.0
 Flask-SQLAlchemy==2.5.1
 Flask-BasicAuth==0.2.0
+werkzeug==2.0.3
 
 typer==0.4.0

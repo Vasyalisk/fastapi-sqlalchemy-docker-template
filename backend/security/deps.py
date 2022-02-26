@@ -3,7 +3,7 @@ from fastapi_jwt_auth import AuthJWT
 from fastapi import Security
 from fastapi.security.api_key import APIKeyHeader
 
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 
 from typing import Optional
 
@@ -75,6 +75,9 @@ class AuthUser:
         """
 
         user = await crud.get_user_by_username(validated_data.username)
+        if user is None:
+            self._raise_unauthorized()
+
         is_valid_password = check_password_hash(user.password, password=validated_data.password)
 
         if not is_valid_password:
