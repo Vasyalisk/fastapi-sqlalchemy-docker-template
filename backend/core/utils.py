@@ -1,8 +1,8 @@
-from config import settings
+from fastapi import FastAPI
 
 import importlib
 
-from fastapi import FastAPI
+from config import settings
 
 
 def add_routers(app: FastAPI):

@@ -10,3 +10,7 @@ class UserDetailResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class UserUpdateRequest(BaseModel):
+    username: str

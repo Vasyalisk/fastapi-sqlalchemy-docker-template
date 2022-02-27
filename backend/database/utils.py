@@ -28,8 +28,9 @@ async def get_async_session() -> AsyncSession:
 
 def with_session(session_name="session"):
     """
-    Decorator to pass db.AsyncSession in case where FastAPI injection can't be used. Closes session after function
-    execution
+    Decorator to pass db.AsyncSession in case where FastAPI injection can't be used.
+
+    Closes session after function execution if no session was provided to the function
     Usage:
         @db.with_session()
         async def foo(session: db.AsyncSession):
@@ -42,6 +43,10 @@ def with_session(session_name="session"):
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
+            session = kwargs.get(session_name)
+            if session:
+                return await func(*args, **kwargs)
+
             async with AsyncSessionLocal() as session:
                 kwargs[session_name] = session
                 return await func(*args, **kwargs)
