@@ -125,6 +125,7 @@ class BaseSerializer:
     schema_class = BaseModel
 
     def __init__(self):
+        self.args = []
         self.validated_data: dict = dict()
         self.model: Optional[BaseSerializer.model_class] = None
 
@@ -132,10 +133,12 @@ class BaseSerializer:
     async def get_instance(
             cls,
             model: Optional[model_class],
+            *arg_deps,
             **deps,
     ) -> "BaseSerializer":
         instance = cls()
         instance.validated_data = cls.get_validated_data(**deps)
+        instance.args = arg_deps
         instance.model = model
         return instance
 
@@ -238,9 +241,10 @@ class DefaultSerializer(BaseSerializer):
     async def get_instance(
             cls,
             model,
+            *arg_deps,
             **deps,
     ) -> "DefaultSerializer":
-        instance = await super().get_instance(model, **deps)
+        instance = await super().get_instance(model, *arg_deps, **deps)
         field_names = list(instance.validated_data.keys())
         instance.model_class = model.__class__
         instance.update_fields_names = field_names

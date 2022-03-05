@@ -27,6 +27,7 @@ class APIView:
 
     def __init__(self):
         self.kwargs = {}
+        self.args = []
         self.authorization: Optional[AuthUser] = None
 
     @classmethod
@@ -74,6 +75,7 @@ class APIView:
 
         serializer = await self.serializer_class.get_instance(
             model=model,
+            *self.args,
             **self.kwargs
         )
         return serializer

@@ -40,6 +40,7 @@ class Settings(BaseSettings):
         "users",
         "security",
         "migrations",
+        "admin",
     ]
 
     # --- Redis section ---

@@ -11,9 +11,9 @@ APP_CONTENT = {
     "views.py": "",
     "serializers.py": "",
     "routers.py": (
-        "from fastapi import APIRouter\n"
+        "from core.routers import ViewAPIRouter\n"
         "\n"
-        "router = APIRouter(prefix='/{app_name}', tags=[{app_name}])"
+        "router = ViewAPIRouter(prefix='/{app_name}', tags=[\"{app_name}\"])"
     ),
 }
 
