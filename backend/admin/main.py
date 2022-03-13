@@ -23,6 +23,8 @@ admin_datastore = SQLAlchemyUserDatastore(
     role_model=admin_models.Role
 )
 security_app = Security(app, admin_datastore)
+
+# noinspection PyArgumentList
 admin_app = Admin(
     app,
     url="/admin",

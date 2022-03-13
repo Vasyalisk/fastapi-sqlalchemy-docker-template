@@ -2,7 +2,7 @@ from flask_security import current_user
 from flask import url_for, request, redirect
 
 
-class AuthorizedAdminView:
+class AuthorizedAdminMixin:
     def is_accessible(self):
         return current_user.is_authenticated
 

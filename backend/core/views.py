@@ -1,17 +1,23 @@
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException, Path
 
-import functools
-from typing import Optional
+from typing import overload
 
-from core import crud
-from core.serializers import DefaultSerializer
+from security.utils import get_authorization
 from security.deps import AuthUser
+
+from core.serializers import DefaultSerializer
+from core import crud
 
 
 class APIView:
     http_methods = None
-    dependencies = None
     response_model = None
+    is_authorized = False
+    model_class = None
+    serializer_class = None
+    dependencies = []
+
+    # Default values
     # response_model_extra = {
     #     "response_model_include": None,
     #     "response_model_exclude": None,
@@ -22,32 +28,56 @@ class APIView:
     # }
     response_model_extra = {}
 
-    model_class = None
-    serializer_class = None
-
     def __init__(self):
-        self.kwargs = {}
-        self.args = []
-        self.authorization: Optional[AuthUser] = None
+        self.request_data = {}
+        self.user = None
+
+    @staticmethod
+    async def get_request() -> dict:
+        return {}
+
+    @classmethod
+    def get_response_model(cls):
+        return cls.response_model
+
+    @staticmethod
+    async def authorize(authorization: AuthUser = Depends(get_authorization)):
+        await authorization.requires_access_token()
+        return authorization.get_user()
 
     @classmethod
     def as_view(cls):
-        func = cls.get_request_signature
+        if cls.is_authorized:
+            return cls._as_authorized_view()
 
-        @functools.wraps(func)
-        async def wrapper(*args, **kwargs):
-            instance = cls()
-            instance.authorization = kwargs.pop("authorization", None)
-            instance.args = args
-            instance.kwargs = kwargs
+        return cls._as_anonymous_view()
 
-            if instance.authorization:
-                await instance.authorization.requires_access_token()
-
-            result = await instance.on_request()
-            return result
+    @classmethod
+    def _as_authorized_view(cls):
+        async def wrapper(
+                user: AuthUser = Depends(cls.authorize),
+                request_data: dict = Depends(cls.get_request)
+        ):
+            view = cls()
+            view.request_data = request_data
+            view.user = user
+            return await view.on_request()
 
         return wrapper
+
+    @classmethod
+    def _as_anonymous_view(cls):
+        async def wrapper(
+                request_data: dict = Depends(cls.get_request)
+        ):
+            view = cls()
+            view.request_data = request_data
+            return await view.on_request()
+
+        return wrapper
+
+    async def on_request(self):
+        raise NotImplemented()
 
     def raise_404(self, detail=None):
         raise HTTPException(status_code=404, detail=detail)
@@ -55,17 +85,10 @@ class APIView:
     def raise_400(self, detail=None):
         raise HTTPException(status_code=400, detail=detail)
 
-    @staticmethod
-    def get_request_signature(*args, **kwargs):
-        pass
-
-    async def on_request(self):
-        raise NotImplemented()
-
     async def get_object(self):
         model = await crud.get_or_none(
             model_class=self.model_class,
-            **self.kwargs
+            **self.request_data
         )
         return model
 
@@ -75,8 +98,7 @@ class APIView:
 
         serializer = await self.serializer_class.get_instance(
             model=model,
-            *self.args,
-            **self.kwargs
+            **self.request_data
         )
         return serializer
 
@@ -85,8 +107,8 @@ class RetrieveAPIView(APIView):
     http_methods = ["get"]
 
     @staticmethod
-    def get_request_signature(id: int):
-        pass
+    def get_request(model_id: int = Path(...)) -> dict:
+        return {"id": model_id}
 
     async def on_request(self):
         model = await self.get_object()
@@ -101,10 +123,18 @@ class RetrieveAPIView(APIView):
 
 class UpdateAPIView(APIView):
     http_methods = ["patch", "put"]
+    lookup_kwarg = "id"
 
     @staticmethod
-    def get_request_signature(id: int):
-        pass
+    def get_request(model_id: int = Path(...)):
+        return {"id": model_id}
+
+    async def get_object(self):
+        model = await crud.get_or_none(
+            model_class=self.model_class,
+            **{self.lookup_kwarg: self.request_data.get(self.lookup_kwarg)}
+        )
+        return model
 
     async def on_request(self):
         model = await self.get_object()
@@ -128,10 +158,18 @@ class CreateAPIVIew(APIView):
 
 class DestroyAPIView(APIView):
     http_methods = ["delete"]
+    lookup_kwarg = "id"
 
     @staticmethod
-    def get_request_signature(id: int):
-        pass
+    def get_request(model_id: int = Path(...)):
+        return {"id": model_id}
+
+    async def get_object(self):
+        model = await crud.get_or_none(
+            model_class=self.model_class,
+            **{self.lookup_kwarg: self.request_data.get(self.lookup_kwarg)}
+        )
+        return model
 
     async def on_request(self):
         model = await self.get_object()

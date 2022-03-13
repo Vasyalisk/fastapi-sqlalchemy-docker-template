@@ -1,8 +1,8 @@
 from flask_admin import AdminIndexView
 
-from admin.views.mixins import AuthorizedAdminView
+from admin.views.mixins import AuthorizedAdminMixin
 
 
-class AuthorizedAdminIndexView(AuthorizedAdminView, AdminIndexView):
+class AuthorizedAdminIndexView(AuthorizedAdminMixin, AdminIndexView):
     def is_visible(self):
         return False
