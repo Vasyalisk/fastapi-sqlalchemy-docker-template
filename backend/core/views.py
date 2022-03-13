@@ -1,7 +1,5 @@
 from fastapi import Depends, HTTPException, Path
 
-from typing import overload
-
 from security.utils import get_authorization
 from security.deps import AuthUser
 

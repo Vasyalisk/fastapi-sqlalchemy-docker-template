@@ -14,7 +14,7 @@ from pydantic import (
 class Settings(BaseSettings):
     # --- Base section ---
     PROJECT_NAME: str
-    SECRET_KEY: Optional[str]
+    SECRET_KEY: str
 
     DEBUG: Optional[bool] = False
     ECHO_SQL: Optional[bool] = False
@@ -34,14 +34,17 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    INSTALLED_APPS: list = [
-        "core",
-        "database",
-        "users",
-        "security",
-        "migrations",
-        "admin",
-    ]
+    # noinspection PyPep8Naming
+    @property
+    def INSTALLED_APPS(self):
+        return [
+            "core",
+            "database",
+            "users",
+            "security",
+            "migrations",
+            "admin",
+        ]
 
     # --- Redis section ---
     REDIS_SERVER: str
@@ -53,7 +56,7 @@ class Settings(BaseSettings):
 
     # --- DB section ---
     DB_HOST: str
-    DB_PORT: int = 5432
+    DB_PORT: int
     DB_USER: str
     DB_PASSWORD: str
     DB_NAME: str
@@ -67,11 +70,14 @@ class Settings(BaseSettings):
         return f'postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}/{self.DB_NAME}'
 
     # --- Authentication section ---
-    ACCESS_TOKEN_EXPIRE_MINUTES: Optional[int] = 24 * 60
-    REFRESH_TOKEN_EXPIRE_MINUTES: Optional[int] = 24 * 60
+    ACCESS_TOKEN_EXPIRE_MINUTES: Optional[int] = 60
+    REFRESH_TOKEN_EXPIRE_MINUTES: Optional[int] = 60 * 24 * 7
 
     # --- Migrations section ---
     MIGRATIONS_DIR: str = "/backend/migrations/versions"
+
+    # --- Admin section ---
+    SECURITY_PASSWORD_SALT: str
 
     class Config:
         case_sensitive = True

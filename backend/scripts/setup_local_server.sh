@@ -15,17 +15,5 @@ if [ ! -f "$OVERRIDE_FILE" ]; then
   cp "$OVERRIDE_FILE_SOURCE" "$OVERRIDE_FILE"
 fi
 
-echo "Starting containers..."
-docker-compose up -d
-
-echo "Generating secret key..."
-SECRET_KEY=$(docker-compose exec app python manage.py generate_secret_key)
-echo "" >> "$ENV_FILE"
-printf "%s" "SECRET_KEY=$SECRET_KEY" >> "$ENV_FILE"
-echo "" >> "$ENV_FILE"
-
-echo "Stopping containers..."
-docker-compose down
-
 echo "Setup is completed. Please run docker-compose up to start server"
 exec "$@"
