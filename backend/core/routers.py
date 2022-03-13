@@ -34,7 +34,7 @@ class ViewAPIRouter(APIRouter):
             openapi_extra=None,
     ) -> None:
         endpoint = view.as_view()
-        response_model = view.response_model or response_model
+        response_model = view.get_response_model() or response_model
         dependencies = view.dependencies or dependencies
         methods = view.http_methods or methods
 
