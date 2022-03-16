@@ -77,7 +77,8 @@
 
 ## 7. Async redis queue (arq) ##
 
-- all task / cron jobs are automatically detected inside tasks.py inside app folders
-- see example at arq_queue.tasks
-- to send tasks import worker from arq_queue and run await worker.enqueue_job(...)
-- see example at arq_queue.views
+- all task / cron jobs are automatically detected inside ```tasks.py``` inside app folders
+- see example at ```arq_queue.tasks```
+- to send tasks ```import worker from arq_queue``` and run ```await worker.enqueue_job(...)```
+- see example at ```arq_queue.views```
+- in order to execute simple tasks run command ```python manage.py send_task TASK_NAME```
