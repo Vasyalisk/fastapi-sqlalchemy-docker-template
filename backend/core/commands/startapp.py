@@ -5,11 +5,15 @@ import os
 
 APP_CONTENT = {
     "__init__.py": "",
-    "models.py": "",
+    "models.py": (
+        "import sqlalchemy as orm\n"
+        "\n"
+        "from database import models\n"
+        "from database import mixins\n"
+    ),
     "crud.py": "from {app_name} import models\n",
     "schemas.py": "from pydantic import BaseModel\n",
     "views.py": "",
-    "serializers.py": "",
     "routers.py": (
         "from core.routers import ViewAPIRouter\n"
         "\n"
