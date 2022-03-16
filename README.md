@@ -8,6 +8,7 @@
 4. Class-based views
 5. SQLAlchemy and alembic migration tool
 6. Flask admin panel
+7. Async redis queue (arq)
 
 ## 1. Setting up docker-compose ##
 
@@ -17,7 +18,7 @@
 - optionally run ```python manage.py createadmin <email> <password>``` inside docker to access admin panel
   at ```localhost/admin```
 
-## 1. Commands CLI ##
+## 2. Commands CLI ##
 
 - support for custom CLI commands in format ```python manage.py <command>```
 - to create custom command put ```<command_name>.py``` file with function named ```command```
@@ -28,7 +29,7 @@
     - run ```python manage.py <command>```
 - see official [Typer docs](https://typer.tiangolo.com) for defining custom commands
 
-## 2. App structure ##
+## 3. App structure ##
 
 - all sub-apps are located in ```backend``` directory
 - to create new sub-app:
@@ -41,7 +42,7 @@
     - instance of ```APIRouter``` or ```ViewAPIRouter``` from ```routers.py``` named as ```router``` is automatically
       mounted to the main app (see example in ```users.routers```)
 
-## 3. Class-based views ##
+## 4. Class-based views ##
 
 - base view classes are defined in ```core.views```
 - concrete implementation can be found in ```users.views```
@@ -56,7 +57,7 @@
 - views can be either mounted using ```core.routers.ViewAPIRouter``` (reduces boilerplate code)
   or ```fastapi.APIRouter```
 
-## 4. SQLAlchemy and alembic migration tool ##
+## 5. SQLAlchemy and alembic migration tool ##
 
 - all models are placed in ```<app_name>/models.py``` and are subclasses of ```database.models.BaseTable```
 - to create automatic migrations run ```python manage.py makemigrations <optional_migration_name>```
@@ -66,10 +67,17 @@
   or ```python manage.py downgrade -2``` (downgrade 2 most recent migrations)
 - all generated migrations are located in ```migrations/versions```
 
-## 5. Flask admin panel ##
+## 6. Flask admin panel ##
 
 - is served at ```localhost/admin```
 - admin panel authorizes admin using cookies provided by Flask-Security
 - to create admin view protected by admin authorization, use ```admin.views.mixins.AuthorizedAdminMixin``` (see example
   in ```admin.views.index.AuthorizedAdminIndexView```)
 - to create admin user run ```python manage.py createadmin <email> <password>```
+
+## 7. Async redis queue (arq) ##
+
+- all task / cron jobs are automatically detected inside tasks.py inside app folders
+- see example at arq_queue.tasks
+- to send tasks import worker from arq_queue and run await worker.enqueue_job(...)
+- see example at arq_queue.views

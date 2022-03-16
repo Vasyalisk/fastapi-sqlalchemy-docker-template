@@ -8,3 +8,11 @@ services:
       - ./backend:/backend
     env_file:
       - .env
+
+  arq:
+    build:
+      dockerfile: Dockerfile.arq
+    volumes:
+      - ./backend:/backend
+    env_file:
+      - .env

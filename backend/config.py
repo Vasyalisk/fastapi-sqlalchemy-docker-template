@@ -44,13 +44,15 @@ class Settings(BaseSettings):
             "security",
             "migrations",
             "admin",
+            "arq_queue",
         ]
 
     # --- Redis section ---
-    REDIS_SERVER: str
+    REDIS_HOST: str
+    REDIS_PORT: int = 6379
     REDIS_PASSWORD: str
     REDIS_APP_DB: Optional[int] = 0
-    REDIS_CELERY_DB: Optional[int] = 1
+    REDIS_ARQ_DB: Optional[int] = 1
 
     HASH_ENCODING: Optional[str] = "utf8"
 

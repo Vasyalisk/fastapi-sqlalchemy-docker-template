@@ -6,6 +6,7 @@ from core import middleware
 from core import utils as core_utils
 from security import utils as security_utils
 from admin.main import app as admin_app
+from arq_queue import worker as task_pool
 
 app = FastAPI(
     title=settings.PROJECT_NAME + " API",
@@ -22,8 +23,10 @@ async def on_startup():
     core_utils.add_routers(app)
     app.mount("/admin", WSGIMiddleware(admin_app))
     security_utils.load_security_config()
+    await task_pool.create_pool()
 
 
 @app.on_event("shutdown")
 async def on_shutdown():
-    pass
+    task_pool.close()
+    await task_pool.wait_closed()
