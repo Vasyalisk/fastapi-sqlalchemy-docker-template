@@ -1,1 +1,1 @@
-from arq_queue.worker import worker
+from arq_queue.worker import job_pool

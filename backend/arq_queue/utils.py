@@ -3,11 +3,11 @@ from importlib import import_module
 from config import settings
 
 
-def detect_tasks():
+def detect_jobs():
     task_modules = (
         module
         for app in settings.INSTALLED_APPS
-        if (module := _import_or_none(f"{app}.tasks"))
+        if (module := _import_or_none(f"{app}.jobs"))
     )
     task_routes = (
         (

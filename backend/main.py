@@ -6,7 +6,7 @@ from core import middleware
 from core import utils as core_utils
 from security import utils as security_utils
 from admin.main import app as admin_app
-from arq_queue import worker as task_pool
+from arq_queue import job_pool as task_pool
 
 app = FastAPI(
     title=settings.PROJECT_NAME + " API",

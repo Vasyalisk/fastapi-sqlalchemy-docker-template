@@ -46,6 +46,7 @@ class Settings(BaseSettings):
             "migrations",
             "admin",
             "arq_queue",
+            "mail",
         ]
 
     # --- Redis section ---

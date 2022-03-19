@@ -12,7 +12,7 @@ class BaseCrud:
     table: BaseTable = None
 
     @classmethod
-    @with_session()
+    @with_session
     async def get_many(cls, model_ids, session: AsyncSession = None) -> Iterable[BaseTable]:
         query = orm.select(
             cls.table
@@ -23,7 +23,7 @@ class BaseCrud:
         return result
 
     @classmethod
-    @with_session()
+    @with_session
     async def get_or_none(cls, model_id, session: AsyncSession = None) -> Optional[BaseTable]:
         query = orm.select(
             cls.table
@@ -34,7 +34,7 @@ class BaseCrud:
         return result
 
     @classmethod
-    @with_session()
+    @with_session
     async def update(cls, model_ids, session: AsyncSession = None, **kwargs) -> int:
         query = orm.update(
             cls.table
@@ -48,7 +48,7 @@ class BaseCrud:
         return result.rowcount
 
     @classmethod
-    @with_session()
+    @with_session
     async def delete(cls, model_ids, session: AsyncSession = None) -> int:
         query = orm.delete(
             cls.table
@@ -60,7 +60,7 @@ class BaseCrud:
         return result.rowcount
 
     @classmethod
-    @with_session()
+    @with_session
     async def create(cls, session: AsyncSession = None, **kwargs):
         model = cls.table(**kwargs)
         session.add(model)

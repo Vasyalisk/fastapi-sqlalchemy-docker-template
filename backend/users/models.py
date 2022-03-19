@@ -5,7 +5,7 @@ from database import mixins
 
 
 class User(models.BaseTable, mixins.ModelMixin):
-    username = orm.Column(orm.String(length=255), nullable=False, unique=True)
+    email = orm.Column(orm.String(length=320), nullable=False, unique=True)
     password = orm.Column(orm.String(length=255), nullable=False)
 
     def __repr__(self):

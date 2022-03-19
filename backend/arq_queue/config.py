@@ -1,9 +1,9 @@
 from arq.connections import RedisSettings
 
 from config import settings
-from arq_queue.utils import detect_tasks
+from arq_queue.utils import detect_jobs
 
-detected_tasks, detected_cron_jobs = detect_tasks()
+detected_tasks, detected_cron_jobs = detect_jobs()
 
 
 class WorkerSettings:

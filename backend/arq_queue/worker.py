@@ -30,4 +30,4 @@ class ArqWorker(ArqRedis):
 
 # Task orchestration docs
 # https://github.com/samuelcolvin/arq/issues/245
-worker = ArqWorker(None)
+job_pool = ArqWorker(None)

@@ -11,3 +11,4 @@ class Mail(models.BaseTable, mixins.ModelMixin):
     sent_at = orm.Column(orm.DateTime, default=None, nullable=True)
     content_text = orm.Column(orm.Text)
     content_html = orm.Column(orm.Text)
+    subject = orm.Column(orm.Text)

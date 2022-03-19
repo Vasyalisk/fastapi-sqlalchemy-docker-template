@@ -10,9 +10,9 @@ functions = [
 ]
 
 cron_jobs = [
-    cron(
-        health_check,
-        name="health-check-each-minute",
-        minute={*range(60)}
-    )
+    # cron(
+    #     health_check,
+    #     name="health-check-each-minute",
+    #     minute={*range(60)}
+    # )
 ]

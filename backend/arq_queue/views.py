@@ -1,6 +1,6 @@
-from arq_queue.worker import worker
+from arq_queue.worker import job_pool
 
 
 async def health_check_api():
-    await worker.enqueue_job("health_check")
+    await job_pool.enqueue_job("health_check")
     return {"success": True}

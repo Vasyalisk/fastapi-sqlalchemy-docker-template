@@ -1,7 +1,7 @@
 import typer
 import asyncio
 
-from arq_queue.worker import worker
+from arq_queue.worker import job_pool
 
 
 def command(
@@ -19,10 +19,10 @@ async def _runner(
         task_name: str,
         wait_for_result: bool = False
 ):
-    if worker._pool_or_conn is None:
-        await worker.create_pool()
+    if job_pool._pool_or_conn is None:
+        await job_pool.create_pool()
 
-    job = await worker.enqueue_job(task_name)
+    job = await job_pool.enqueue_job(task_name)
     typer.echo(f"Task {task_name} is sent!")
 
     if not wait_for_result:
