@@ -1,7 +1,6 @@
 from config import settings
 from users import crud as users_crud
 from mail import utils
-from redis_db import redis_client
 
 
 async def send_email(ctx, template_name: str, **kwargs):
