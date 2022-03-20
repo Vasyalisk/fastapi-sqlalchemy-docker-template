@@ -7,3 +7,7 @@ class SendTestEmailRequest(BaseModel):
 
 class SendTestEmailResponse(BaseModel):
     is_sent: bool
+
+
+class BoolResponse(BaseModel):
+    success: bool = True

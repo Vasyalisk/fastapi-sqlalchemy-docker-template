@@ -20,7 +20,7 @@ def render_email(template_name, **kwargs) -> tuple[str, str]:
     return text_template.render(**kwargs), html_template.render(**kwargs)
 
 
-@with_session
+@with_session()
 async def send_email(
         text: str,
         html: str,

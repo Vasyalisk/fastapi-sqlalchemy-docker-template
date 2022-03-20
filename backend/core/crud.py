@@ -3,7 +3,7 @@ import sqlalchemy as orm
 from database.utils import with_session, AsyncSession
 
 
-@with_session
+@with_session()
 async def get_or_none(
         model_class,
         session: AsyncSession = None,
@@ -14,7 +14,7 @@ async def get_or_none(
     return result
 
 
-@with_session
+@with_session()
 async def update(
         model,
         session: AsyncSession = None,
@@ -38,7 +38,7 @@ async def update(
     return model
 
 
-@with_session
+@with_session()
 async def create(
         model_class,
         session: AsyncSession = None,
@@ -50,7 +50,7 @@ async def create(
     return model
 
 
-@with_session
+@with_session()
 async def delete(
         model,
         session: AsyncSession = None

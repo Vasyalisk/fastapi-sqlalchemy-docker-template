@@ -1,10 +1,18 @@
 from fastapi import Depends, HTTPException, Path
 
+import re
+
 from security.utils import get_authorization
 from security.deps import AuthUser
 
 from core.serializers import DefaultSerializer
 from core import crud
+
+_camel_to_snake_pattern = re.compile(r'(?<!^)(?=[A-Z])')
+
+
+def _camel_to_snake(s):
+    return _camel_to_snake_pattern.sub('_', s).lower()
 
 
 class APIView:
@@ -46,9 +54,13 @@ class APIView:
     @classmethod
     def as_view(cls):
         if cls.is_authorized:
-            return cls._as_authorized_view()
+            view = cls._as_authorized_view()
+        else:
+            view = cls._as_anonymous_view()
 
-        return cls._as_anonymous_view()
+        view.__doc__ = cls.__doc__
+        view.__name__ = _camel_to_snake(cls.__name__)
+        return view
 
     @classmethod
     def _as_authorized_view(cls):

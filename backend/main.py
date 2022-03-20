@@ -2,11 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.wsgi import WSGIMiddleware
 
 from config import settings
-from core import middleware
-from core import utils as core_utils
+from core.middleware import add_cors_middleware
+from core.utils import add_routers
 from security import utils as security_utils
 from admin.main import app as admin_app
-from arq_queue import job_pool as task_pool
+from arq_queue import job_pool
+from redis_db import redis_client
 
 app = FastAPI(
     title=settings.PROJECT_NAME + " API",
@@ -19,14 +20,17 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def on_startup():
-    middleware.add_cors_middleware(app)
-    core_utils.add_routers(app)
+    add_cors_middleware(app)
+    add_routers(app)
     app.mount("/admin", WSGIMiddleware(admin_app))
     security_utils.load_security_config()
-    await task_pool.create_pool()
+    await job_pool.create_pool()
+    await redis_client.create_pool()
 
 
 @app.on_event("shutdown")
 async def on_shutdown():
-    task_pool.close()
-    await task_pool.wait_closed()
+    job_pool.close()
+    await job_pool.wait_closed()
+    redis_client.close()
+    await redis_client.wait_closed()

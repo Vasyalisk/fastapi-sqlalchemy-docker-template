@@ -15,6 +15,7 @@ class MailSettings(BaseSettings):
     def registered_templates(self):
         return [
             "reset_password",
+            "verify_email",
         ]
 
     class Config:

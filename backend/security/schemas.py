@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class TokensResponse(BaseModel):
@@ -22,5 +22,30 @@ class RegisterRequest(BaseModel):
     """
     Payload to register user
     """
-    username: str
+    email: EmailStr
     password: str
+
+
+class ResetPasswordRequest(BaseModel):
+    email: str
+
+
+class ResetPasswordResponse(BaseModel):
+    success: bool = True
+
+
+class ResetPasswordConfirmRequest(BaseModel):
+    code: str
+    password: str
+
+
+class ResetPasswordConfirmResponse(BaseModel):
+    success: bool = True
+
+
+class VerifyEmailResponse(BaseModel):
+    success: bool = True
+
+
+class ResendVerifyEmailResponse(BaseModel):
+    success: bool = True

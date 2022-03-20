@@ -4,7 +4,6 @@ from typing import (
     Union
 )
 
-
 from pydantic import (
     AnyHttpUrl,
     BaseSettings,
@@ -20,6 +19,8 @@ class Settings(BaseSettings):
     DEBUG: Optional[bool] = False
     ECHO_SQL: Optional[bool] = False
     TESTING: Optional[bool] = False
+
+    FE_DOMAIN: str = "http://localhost:3000"
 
     BACKEND_CORS_ORIGINS: Optional[List[AnyHttpUrl]] = [
         "http://localhost",
@@ -47,6 +48,8 @@ class Settings(BaseSettings):
             "admin",
             "arq_queue",
             "mail",
+            "redis_db",
+            "test_api",
         ]
 
     # --- Redis section ---
