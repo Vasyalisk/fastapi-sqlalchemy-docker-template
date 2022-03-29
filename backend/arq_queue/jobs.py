@@ -84,12 +84,12 @@ async def intermediate_job(
     :return:
     """
     job_pool: ArqRedis = ctx["redis"]
-    is_immutable: bool = job_payload.get("immutable", True)
+    is_mutable: bool = job_payload.get("mutable", False)
     kwargs: dict = job_payload.pop("kwargs", {})
     args: list = job_payload.pop("args", [])
     name: str = job_payload.pop("name")
 
-    if not is_immutable:
+    if is_mutable:
         _update_job_payload(
             intermediate_result=intermediate_result,
             args=args,

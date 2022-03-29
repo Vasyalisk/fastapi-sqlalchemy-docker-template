@@ -36,20 +36,26 @@ async def composite_task_view(
     - finally prints default message
     """
     test_workflow = (
+        # 1. Execute single job
         {
             "name": "health_check",
             "kwargs": {"msg": chained_msg}
         },
+        # 2. Execute jobs in tuple in parallel
         (
             {
                 "name": "health_check",
-                "immutable": False
+                # Result of previous job in step 1 is passed to mutable job
+                "mutable": True
             },
             {
                 "name": "health_check",
+                # Immutable (default) job does not accept previous result
                 "kwargs": {"msg": individual_msg}
             }
         ),
+        # 3. Execute last job with default args, kwargs for that job (see health_check function)
+        # This job could also be mutable - in that case it would accept unpacked list of previous results from step 2
         {
             "name": "health_check"
         }
