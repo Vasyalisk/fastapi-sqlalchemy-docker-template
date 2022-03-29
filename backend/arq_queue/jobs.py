@@ -6,8 +6,11 @@ from arq.jobs import Job
 from typing import Union, Iterable
 
 
-async def health_check(ctx: dict):
-    print("Arq health check done...")
+async def health_check(ctx: dict, msg=None):
+    if msg is None:
+        msg = "Arq health check done..."
+    print(msg)
+    return {"msg": msg}
 
 
 async def composite_job(ctx: dict, workflow: tuple[Union[Iterable[dict], dict]]):
@@ -51,7 +54,7 @@ async def composite_job(ctx: dict, workflow: tuple[Union[Iterable[dict], dict]])
     for job_payload in workflow:
         try:
             intermediate_result = await parallel_job(
-                ctx=ctx,
+                ctx,
                 *job_payload,
                 intermediate_result=intermediate_result
             )
@@ -81,23 +84,41 @@ async def intermediate_job(
     :return:
     """
     job_pool: ArqRedis = ctx["redis"]
-    is_immutable: bool = job_payload.get("immutable")
+    is_immutable: bool = job_payload.get("immutable", True)
     kwargs: dict = job_payload.pop("kwargs", {})
     args: list = job_payload.pop("args", [])
     name: str = job_payload.pop("name")
 
-    if not is_immutable and intermediate_result is not None:
-        try:
-            kwargs.update(**intermediate_result)
-        except TypeError:
-            pass
-        try:
-            args.extend(*intermediate_result)
-        except TypeError:
-            args.append(intermediate_result)
+    if not is_immutable:
+        _update_job_payload(
+            intermediate_result=intermediate_result,
+            args=args,
+            kwargs=kwargs
+        )
 
     intermediate_result = await job_pool.enqueue_job(name, *args, **kwargs)
     return intermediate_result
+
+
+def _update_job_payload(intermediate_result, args, kwargs):
+    """
+    - Updates kwargs with intermediate_result if it is dict
+    - Extends args with intermediate_result if it is iterable
+    - Finally appends intermediate_result to args
+    :param intermediate_result:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    try:
+        kwargs.update(**intermediate_result)
+        return
+    except TypeError:
+        pass
+    try:
+        args.extend(*intermediate_result)
+    except TypeError:
+        args.append(intermediate_result)
 
 
 async def parallel_job(
@@ -116,6 +137,9 @@ async def parallel_job(
     """
     jobs = []
     for single_payload in job_payloads:
+        if not isinstance(single_payload, dict):
+            raise TypeError
+
         jobs.append(intermediate_job(
             ctx=ctx,
             job_payload=single_payload,
