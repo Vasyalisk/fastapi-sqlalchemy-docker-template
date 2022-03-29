@@ -27,6 +27,9 @@ class ArqWorker(ArqRedis):
         self.default_queue_name = new_pool.default_queue_name
         self._pool_or_conn = new_pool._pool_or_conn
 
+    def is_connected(self) -> bool:
+        return self._pool_or_conn is not None
+
 
 # Task orchestration docs
 # https://github.com/samuelcolvin/arq/issues/245

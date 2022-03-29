@@ -19,7 +19,7 @@ async def _runner(
         task_name: str,
         wait_for_result: bool = False
 ):
-    if job_pool._pool_or_conn is None:
+    if not job_pool.is_connected():
         await job_pool.create_pool()
 
     job = await job_pool.enqueue_job(task_name)
