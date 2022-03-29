@@ -8,6 +8,11 @@ services:
     ports:
       - "80:8000"
 
+  arq:
+    depends_on:
+      - db
+      - redis
+
   db:
     image: postgres:12
     volumes:

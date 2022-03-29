@@ -13,4 +13,4 @@ RUN pip install -r requirements.txt
 COPY ./backend /backend
 ENV PYTHONPATH=/backend
 
-CMD ["arq", "--watch", ".", "arq_queue.config.WorkerSettings"]
+ENTRYPOINT ["/backend/scripts/entrypoint_arq.sh"]

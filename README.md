@@ -14,6 +14,7 @@
 
 - run either ```sh backend/scripts/setup_local_server.sh``` or ```sh backend/scripts/setup_prod_server.sh```
 - fill in missing params in created .env file
+- edit created docker-compose.override.yml file if needed
 - run ```docker-compose up``` (will raise validation errors in case some mandatory fields are missing)
 - optionally run ```python manage.py createadmin <email> <password>``` inside docker to access admin panel
   at ```localhost/admin```
