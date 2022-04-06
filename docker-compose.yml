@@ -12,6 +12,7 @@ services:
   arq:
     build:
       dockerfile: Dockerfile.arq
+      context: .
     volumes:
       - ./backend:/backend
     env_file:
